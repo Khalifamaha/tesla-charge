@@ -17,7 +17,7 @@ npm install
 
 ## Environment Variables
 The `.env` file contains:
-- `PORT=3000` - Server port
+- `http://localhost:3001` - Server port
 - `JWT_SECRET` - JWT secret key
 - `DB_PATH` - Database file path
 

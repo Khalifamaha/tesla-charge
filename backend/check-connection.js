@@ -157,7 +157,7 @@ function checkDatabaseConnection() {
                 console.log('✅ VÉRIFICATION TERMINÉE AVEC SUCCÈS');
                 console.log('='.repeat(60));
                 console.log('\n🚀 La base de données est prête à utiliser!');
-                console.log('🔗 Serveur: http://localhost:3000');
+                console.log('🔗 Serveur: http://localhost:3001');
                 console.log('📧 Email test: test@tesla.com');
                 
                 db.close((err) => {

@@ -32,7 +32,7 @@ node server-final.js
 ```
 
 ### 2. Accéder à l'Application
-Ouvrez votre navigateur sur: `http://localhost:3000`
+Ouvrez votre navigateur sur: `http://localhost:3001`
 
 ### 3. Connexion Test
 - **Email**: `test@tesla.com`

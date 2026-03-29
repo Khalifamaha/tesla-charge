@@ -18,7 +18,7 @@ const io = socketIo(server, {
     }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'tesla-charge-super-secret-2024';
 
 app.use(cors());
@@ -70,7 +70,7 @@ async function initializeMongoDB() {
             // Create indexes for better performance
             if (collectionName === 'users') {
                 await collection.createIndex({ email: 1 }, { unique: true, name: 'email_unique' });
-                await collection.createIndex({ phone: 1 }, { unique: true, name: 'phone_unique', sparse: true });
+                // Removed phone unique index to avoid null conflicts
             } else if (collectionName === 'vehicles') {
                 await collection.createIndex({ user_id: 1 });
                 await collection.createIndex({ license_plate: 1 });
@@ -388,10 +388,23 @@ app.post('/api/reservations', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
+        // Convert IDs to ObjectId safely
+        let stationIdObj, vehicleIdObj;
+        try {
+            stationIdObj = new ObjectId(station_id);
+        } catch (e) {
+            stationIdObj = station_id; // Use as string if not valid ObjectId
+        }
+        try {
+            vehicleIdObj = new ObjectId(vehicle_id);
+        } catch (e) {
+            vehicleIdObj = vehicle_id; // Use as string if not valid ObjectId
+        }
+
         const newReservation = {
             user_id: new ObjectId(userId),
-            station_id: new ObjectId(station_id),
-            vehicle_id: new ObjectId(vehicle_id),
+            station_id: stationIdObj,
+            vehicle_id: vehicleIdObj,
             date,
             start_time,
             end_time,

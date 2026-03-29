@@ -32,7 +32,7 @@ Frontend application for Tesla charging station reservation system.
 
 ## Usage
 1. Open `index.html` in a web browser
-2. Connect to the backend server at `http://localhost:3000`
+2. Connect to the backend server at `http://localhost:3001`
 3. Use test email: `test@tesla.com` with OTP code
 
 ## Design
@@ -42,7 +42,7 @@ Frontend application for Tesla charging station reservation system.
 - **Accessible**: Semantic HTML and ARIA labels
 
 ## API Integration
-- Base URL: `http://localhost:3000/api`
+- Base URL: `http://localhost:3001/api`
 - Authentication: JWT tokens
 - Error handling: User-friendly messages
 - Loading states: Visual feedback

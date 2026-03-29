@@ -52,7 +52,7 @@
         <div class="mt-8">
             <h2 class="text-xl font-bold text-gray-900 mb-4">Actions Rapides</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button onclick="window.open('http://localhost:3000', '_blank')" class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700">
+                <button onclick="window.open('http://localhost:3001', '_blank')" class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700">
                     <i class="fas fa-external-link-alt mr-2"></i>
                     Ouvrir l'App
                 </button>
@@ -101,7 +101,7 @@
             
             try {
                 // Ouvrir l'application dans une nouvelle fenêtre
-                const appWindow = window.open('http://localhost:3000', '_blank', 'width=800,height=600');
+                const appWindow = window.open('http://localhost:3001', '_blank', 'width=800,height=600');
                 
                 // Attendre un peu pour le chargement
                 await new Promise(resolve => setTimeout(resolve, 2000));
@@ -146,7 +146,7 @@
             console.log('📧 Génération OTP...');
             
             try {
-                const response = await fetch('http://localhost:3000/api/send-otp', {
+                const response = await fetch('http://localhost:3001/api/send-otp', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -183,7 +183,7 @@
             
             // Test 1: Vérification du serveur
             try {
-                const response = await fetch('http://localhost:3000/api/stations');
+                const response = await fetch('http://localhost:3001/api/stations');
                 if (response.ok) {
                     addTestResult('Serveur Backend', 'ok', 
                         'Serveur accessible et fonctionnel', 
@@ -199,7 +199,7 @@
             
             // Test 2: Vérification des fichiers statiques
             try {
-                const response = await fetch('http://localhost:3000/app-clean.js');
+                const response = await fetch('http://localhost:3001/app-clean.js');
                 if (response.ok) {
                     addTestResult('Fichiers Frontend', 'ok', 
                         'Fichiers JavaScript accessibles', 

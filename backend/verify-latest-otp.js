@@ -72,7 +72,7 @@ function verifyLatestOTP() {
                     console.log(`   🔢 Code: ${latestValid.code}`);
                     console.log(`   📧 Email: test@tesla.com`);
                     console.log(`   ⏰ Valide jusqu'à: ${new Date(latestValid.expires_at).toLocaleString('fr-FR')}`);
-                    console.log(`   🔗 Allez sur: http://localhost:3000`);
+                    console.log(`   🔗 Allez sur: http://localhost:3001`);
                 } else {
                     console.log('\n❌ Aucun code valide trouvé pour test@tesla.com');
                     console.log('💡 Générez un nouveau code avec: node generate-otp.js');

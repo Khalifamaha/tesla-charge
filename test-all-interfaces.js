@@ -10,7 +10,7 @@ async function testAllInterfaces() {
     try {
         // Test 1: Accès à la page d'accueil
         console.log('\n📱 Test 1: Accès à la page d\'accueil');
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3001');
         await page.waitForSelector('#otpSection', { timeout: 5000 });
         console.log('✅ Page d\'accueil chargée');
         
@@ -64,7 +64,7 @@ async function testAllInterfaces() {
         
         // Test 7: Test de l'interface véhicule
         console.log('\n🚗 Test 7: Interface véhicule');
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3001');
         await page.waitForTimeout(2000);
         
         // Forcer l'affichage de la section véhicule

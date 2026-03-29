@@ -119,7 +119,7 @@ function debugOTPInsertion() {
         
         const options = {
             hostname: 'localhost',
-            port: 3000,
+            port: 3001,
             path: '/api/send-otp',
             method: 'POST',
             headers: {

@@ -13,7 +13,7 @@ async function generateOTP() {
         
         const options = {
             hostname: 'localhost',
-            port: 3000,
+            port: 3001,
             path: '/api/send-otp',
             method: 'POST',
             headers: {
@@ -56,7 +56,7 @@ async function generateOTP() {
         console.log(`✅ Succès: ${response.status === 200 ? 'OUI' : 'NON'}`);
         
         console.log('\n💡 Le code OTP s\'affiche dans la console du serveur!');
-        console.log('🔗 Allez sur: http://localhost:3000');
+        console.log('🔗 Allez sur: http://localhost:3001');
         console.log('📧 Utilisez: test@tesla.com');
         
     } catch (error) {

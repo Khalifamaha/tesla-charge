@@ -3,7 +3,7 @@
 ## 🎯 Interfaces Principales
 
 ### 1. 🔐 Interface OTP (Authentification)
-- **URL**: `http://localhost:3000` (par défaut)
+- **URL**: `http://localhost:3001` (par défaut)
 - **Fonction**: Vérification par email/code OTP
 - **Éléments**:
   - Logo Tesla (bouclier rouge)
@@ -92,10 +92,10 @@
 ## 📱 Points d'Accès
 
 ### URLs
-- **Principal**: `http://localhost:3000`
-- **API Stations**: `http://localhost:3000/api/stations`
-- **API OTP**: `http://localhost:3000/api/send-otp`
-- **API Véhicules**: `http://localhost:3000/api/vehicles`
+- **Principal**: `http://localhost:3001`
+- **API Stations**: `http://localhost:3001/api/stations`
+- **API OTP**: `http://localhost:3001/api/send-otp`
+- **API Véhicules**: `http://localhost:3001/api/vehicles`
 
 ### Fonctions Globales
 - `startOCRScanner()` - Ouvre le scanner

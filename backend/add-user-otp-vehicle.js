@@ -138,7 +138,7 @@ function verifyAddedData(userId, email, otpCode) {
         console.log(`🔐 Code OTP: ${otpCode}`);
         console.log(`🚗 Véhicule: NEW-999-XYZ`);
         console.log('\n🎯 TEST DANS L\'APPLICATION:');
-        console.log(`1. Allez sur: http://localhost:3000`);
+        console.log(`1. Allez sur: http://localhost:3001`);
         console.log(`2. Email: ${email}`);
         console.log(`3. Code OTP: ${otpCode}`);
         console.log(`4. Vérifiez que le véhicule apparaît dans le dashboard`);
