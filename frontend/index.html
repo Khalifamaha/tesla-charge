@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeslaCharge - Réservation de Bornes de Recharge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .tesla-red {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+        .animate-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .scan-line {
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .otp-input-filled {
+            border-color: #10b981 !important;
+            background-color: #f0fdf4 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-in">
+        <p id="toastMessage" class="text-white font-medium"></p>
+    </div>
+
+    <!-- OTP Section -->
+    <div id="otpSection" class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-effect rounded-2xl shadow-xl p-8 animate-in max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="tesla-red w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-3xl text-white"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Vérification Tesla</h2>
+                <p class="text-gray-600">Connectez-vous avec votre email ou téléphone</p>
+            </div>
+
+            <!-- OTP Send Form -->
+            <div id="otpSendContainer" class="space-y-4">
+                <form id="otpSendForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Adresse Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                            <input type="email" id="contactInput" required placeholder="elon@tesla.com" class="block w-full pl-11 pr-4 py-4 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full tesla-red text-white py-4 px-4 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Recevoir le code
+                    </button>
+                </form>
+            </div>
+
+            <!-- OTP Verify Section -->
+            <div id="otpVerifyContainer" class="hidden space-y-6">
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                        <i class="fas fa-envelope text-green-600 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-600 mb-2">Code envoyé à</p>
+                    <p id="contactDisplay" class="font-medium text-gray-900 text-lg"></p>
+                    <p class="text-sm text-gray-500 mt-2">Entrez le code à 6 chiffres</p>
+                </div>
+                <form id="otpVerifyForm" class="space-y-6">
+                    <div class="flex justify-center gap-3">
+                        <div class="relative">
+                            <input type="text" maxlength="1" data-index="0" class="otp-input w-14 h-16 text-center text-2xl font-bold bg-white border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all" autocomplete="off">
+                            <div class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full pulse-dot hidden" data-dot="0"></div>
+                        </div>
+                        <div class="relative">
+                            <input type="text" maxlength="1" data-index="1" class="otp-input w-14 h-16 text-center text-2xl font-bold bg-white border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all" autocomplete="off">
+                            <div class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full pulse-dot hidden" data-dot="1"></div>
+                        </div>
+                        <div class="relative">
+                            <input type="text" maxlength="1" data-index="2" class="otp-input w-14 h-16 text-center text-2xl font-bold bg-white border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all" autocomplete="off">
+                            <div class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full pulse-dot hidden" data-dot="2"></div>
+                        </div>
+                        <div class="relative">
+                            <input type="text" maxlength="1" data-index="3" class="otp-input w-14 h-16 text-center text-2xl font-bold bg-white border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all" autocomplete="off">
+                            <div class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full pulse-dot hidden" data-dot="3"></div>
+                        </div>
+                        <div class="relative">
+                            <input type="text" maxlength="1" data-index="4" class="otp-input w-14 h-16 text-center text-2xl font-bold bg-white border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all" autocomplete="off">
+                            <div class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full pulse-dot hidden" data-dot="4"></div>
+                        </div>
+                        <div class="relative">
+                            <input type="text" maxlength="1" data-index="5" class="otp-input w-14 h-16 text-center text-2xl font-bold bg-white border-2 border-gray-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all" autocomplete="off">
+                            <div class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full pulse-dot hidden" data-dot="5"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timer and Resend -->
+                    <div class="text-center space-y-2">
+                        <div class="flex items-center justify-center gap-2 text-sm text-gray-600">
+                            <i class="fas fa-clock"></i>
+                            <span id="otpTimer">Code valide pendant 10:00</span>
+                        </div>
+                        <button type="button" onclick="resendOTP()" class="text-red-600 hover:text-red-700 text-sm font-medium underline">
+                            Renvoyer le code
+                        </button>
+                    </div>
+                    
+                    <button type="submit" class="w-full tesla-red text-white py-4 px-4 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Vérifier et continuer
+                    </button>
+                </form>
+                
+                <!-- Help Section -->
+                <div class="text-center">
+                    <details class="text-sm text-gray-500">
+                        <summary class="cursor-pointer hover:text-gray-700">Besoin d'aide ?</summary>
+                        <div class="mt-2 space-y-1">
+                            <p>• Vérifiez vos spams</p>
+                            <p>• Le code expire après 10 minutes</p>
+                            <p>• Contactez support@tesla.com si problème</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <button onclick="backToOTPForm()" class="w-full text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Changer d'email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Section -->
+    <div id="vehicleSection" class="hidden min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <div class="tesla-red w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-car text-3xl text-white"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Identification du Véhicule</h2>
+                <p class="text-gray-600">Scannez votre carte grise ou saisissez les informations manuellement</p>
+            </div>
+
+            <!-- Vehicle Data Input -->
+            <div class="space-y-6">
+                <!-- OCR Scanner Section -->
+                <div class="glass-effect rounded-2xl shadow-xl p-8 animate-in">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <i class="fas fa-camera text-red-600"></i>
+                        Scanner Carte Grise
+                    </h3>
+                    <div class="text-center">
+                        <button onclick="startOCRScanner()" class="tesla-red text-white py-4 px-6 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            <i class="fas fa-camera mr-2"></i>
+                            Démarrer le Scanner
+                        </button>
+                        <p class="text-gray-500 text-sm mt-2">
+                            Positionnez votre carte grise devant la caméra
+                        </p>
+                    </div>
+                </div>
+
+                <!-- French Vehicle Section -->
+                <div class="glass-effect rounded-2xl shadow-xl p-8 animate-in">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <i class="fas fa-car text-red-600"></i>
+                        Véhicule Français
+                    </h3>
+                    <form id="manualVehicleForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Immatriculation</label>
+                                <input type="text" id="licensePlate" required placeholder="AB-123-CD" class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de châssis (VIN)</label>
+                                <input type="text" id="vinNumber" required placeholder="1HGCM82633A123456" class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full tesla-red text-white py-4 px-4 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            <i class="fas fa-check mr-2"></i>
+                            Valider le véhicule français
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Foreign Vehicle Link -->
+                <div class="text-center">
+                    <button onclick="toggleForeignVehicle()" class="text-red-600 hover:text-red-700 font-medium underline transition-colors">
+                        <i class="fas fa-globe mr-2"></i>
+                        Véhicule étranger ? Cliquez ici
+                    </button>
+                </div>
+
+                <!-- Foreign Vehicle Section (Hidden by default) -->
+                <div id="foreignVehicleSection" class="hidden glass-effect rounded-2xl shadow-xl p-8 animate-in">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <i class="fas fa-globe text-red-600"></i>
+                        Véhicule Étranger
+                    </h3>
+                    <form id="foreignVehicleForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Immatriculation</label>
+                                <input type="text" id="foreignLicensePlate" required placeholder="DE-AB-1234" class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de châssis (VIN)</label>
+                                <input type="text" id="foreignVinNumber" required placeholder="WBA1A123456789012" class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pays d'immatriculation</label>
+                                <select id="country" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                                    <option value="">Sélectionnez un pays</option>
+                                    <option value="Allemagne">Allemagne</option>
+                                    <option value="Belgique">Belgique</option>
+                                    <option value="Espagne">Espagne</option>
+                                    <option value="Italie">Italie</option>
+                                    <option value="Luxembourg">Luxembourg</option>
+                                    <option value="Pays-Bas">Pays-Bas</option>
+                                    <option value="Portugal">Portugal</option>
+                                    <option value="Suisse">Suisse</option>
+                                    <option value="Royaume-Uni">Royaume-Uni</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full tesla-red text-white py-4 px-4 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            <i class="fas fa-check mr-2"></i>
+                            Valider le véhicule étranger
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="hidden min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">TeslaCharge Dashboard</h1>
+                    <p class="text-gray-600">Bienvenue, <span id="userName">Utilisateur</span></p>
+                </div>
+                <div class="flex gap-4">
+                    <button id="logoutBtn" class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Déconnexion
+                    </button>
+                </div>
+            </div>
+
+            <!-- User Vehicles -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fas fa-car text-red-600"></i>
+                    Mes Véhicules
+                </h2>
+                <div id="vehicleInfo" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Vehicles will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Stations -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-red-600"></i>
+                    Bornes de Recharge à Proximité
+                </h2>
+                <div id="stationsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Stations will be loaded here -->
+                </div>
+            </div>
+
+            <!-- User Reservations -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fas fa-calendar-alt text-red-600"></i>
+                    Mes Réservations
+                </h2>
+                <div id="reservationsList" class="space-y-4">
+                    <!-- Reservations will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OCR Modal -->
+    <div id="ocrModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black hidden">
+        <div class="relative w-full max-w-md">
+            <div class="bg-black rounded-xl p-6">
+                <div class="flex justify-between items-center text-white mb-4">
+                    <button onclick="closeOCRScanner()" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    <h3 class="text-lg font-medium">Scan Carte Grise</h3>
+                    <div class="w-8"></div>
+                </div>
+                
+                <div class="relative w-full aspect-[4/3] border-2 border-white/50 rounded-xl overflow-hidden mb-6">
+                    <div id="scanLine" class="absolute w-full h-1 bg-red-500 scan-line hidden"></div>
+                    
+                    <div class="absolute bottom-4 left-0 right-0 text-center text-white/80 text-sm font-medium">
+                        <p id="scannerStatus">Placez la carte grise dans le cadre</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <button onclick="startOCRScanner()" class="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-white hover:bg-gray-200 transition-all">
+                        <i class="fas fa-camera text-2xl text-gray-700"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservation Modal -->
+    <div id="reservationModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="glass-effect rounded-2xl shadow-2xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                        <div class="tesla-red w-12 h-12 rounded-full flex items-center justify-center">
+                            <i class="fas fa-bolt text-white text-xl"></i>
+                        </div>
+                        Réserver une Station
+                    </h3>
+                    <button onclick="closeReservationModal()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i class="fas fa-times text-xl text-gray-600"></i>
+                    </button>
+                </div>
+                
+                <form id="reservationForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Station de Recharge</label>
+                            <select id="stationSelect" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                                <option value="">Sélectionnez une station</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Véhicule</label>
+                            <select id="vehicleSelect" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                                <option value="">Sélectionnez un véhicule</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date de Réservation</label>
+                            <input type="date" id="reservationDate" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Type de Charge</label>
+                            <select id="chargingType" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                                <option value="standard">Standard (22kW)</option>
+                                <option value="rapide">Rapide (50kW)</option>
+                                <option value="ultra">Ultra (150kW)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Heure de Début</label>
+                            <select id="startTime" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Heure de Fin</label>
+                            <select id="endTime" required class="block w-full px-4 py-3 bg-gray-50 border-0 text-gray-900 rounded-xl ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-red-600 transition-all">
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                                <option value="21:00">21:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Récapitulatif de Réservation</h4>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p id="recapStation">Station: Non sélectionnée</p>
+                            <p id="recapVehicle">Véhicule: Non sélectionné</p>
+                            <p id="recapDate">Date: Non sélectionnée</p>
+                            <p id="recapTime">Temps: Non sélectionné</p>
+                            <p id="recapType">Type: Non sélectionné</p>
+                            <p id="recapPrice">Prix estimé: Calcul en cours...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="button" onclick="closeReservationModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-300 transition-colors">
+                            <i class="fas fa-times mr-2"></i>
+                            Annuler
+                        </button>
+                        <button type="submit" class="flex-1 tesla-red text-white py-3 px-4 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            <i class="fas fa-check mr-2"></i>
+                            Confirmer la Réservation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app-reservation-complete.js"></script>
+</body>
+</html>

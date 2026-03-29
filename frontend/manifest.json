@@ -1,0 +1,27 @@
+{
+  "name": "TeslaCharge - Réservation de Bornes",
+  "short_name": "TeslaCharge",
+  "description": "Application mobile de réservation de bornes de recharge Tesla",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiNkYzI2MjYiLz4KPHBhdGggZD0iTTEyNiA5NkMxMjYgMTA0LjQgMTE5LjQgMTExIDExMSAxMTFINzVDNjYuNiAxMTEgNjAgMTA0LjQgNjAgOTZDNjAgODcuNiA2Ni42IDgxIDc1IDgxSDExMUMxMTkuNCA4MSAxMjYgODcuNiAxMjYgOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYgNjRWODFINzVWNjRDOTYgNjQgOTYgNjRaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTE3IDY0SDk2VjgxSDExN0MxMTcuNCA4MSAxMTggODAuNCAxMTggNzZWNjhDMTggNjYuNiAxMTcuNCA2NCAxMTcgNjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiNkYzI2MjYiLz4KPHBhdGggZD0iTTMzNiAyNTZDMzM2IDI3OCAzMjAgMjk2IDMwNCAyOTZIMjA4QzE5MiAyOTYgMTYwIDI3OCAxNjAgMjU2QzE2MCAyMzQgMTkyIDIxNiAyMDggMjE2SDMwNEMzMjAgMjE2IDMzNiAyMzQgMzM2IDI1NloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yNTYgMTcyVjIxNkgyMDhWMTcyQzI1NiAxNzIgMjU2IDE3MloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0zMTIgMTcySDI1NlYyMTZIMzEyQzMxMy42IDIxNiAzMTQgMjE0LjQgMzE0IDIxMlYxODJDMzE0IDE3NiAzMTMuNiAxNzIgMzEyIDE3MloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["utilities", "productivity", "lifestyle"],
+  "lang": "fr",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
